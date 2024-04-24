@@ -12,11 +12,14 @@ body {
     align-items: center;
     justify-content: right;
 }
+.index{
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
 .container {
     margin-top: 30px;
     }
-.row {
-}
 .my_photo {
     background: url(../image/pic.jpg) no-repeat center center;
     background-size: 100%;
@@ -43,4 +46,38 @@ body {
     background-color: #ff0000fa;
     color: #fff;
     font-weight: bold;
+}
+
+.form_reg{  
+    background-color: #af8181;
+    font-family: 'Courier New', Courier, monospace;  
+    color: #918f4e;
+}
+.btn_reg {
+    border: 3px;
+    border-radius: 10px;
+    width: 150px;
+    height: 50px;
+    background-color: #0004fffa;
+    color: #fff;
+    font-weight: bold;
+}
+.text_in{
+    border: 3px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+.col-12{
+    border: 30px;
+    border-radius: 100px;
+    width: 150px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.row {
+    align-items: center;
 }
