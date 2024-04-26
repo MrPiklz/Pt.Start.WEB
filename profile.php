@@ -123,26 +123,54 @@
 
     if (isset($_POST['submit'])) {
 
-        $title = $_POST['title'];
-        $main_text = $_POST['text'];
+        $title = strip_tags($_POST['title']);
+        $main_text = strip_tags($_POST['text']);
+
+        
+        $title = mysqli_real_escape_string($title);
+        $main_text = mysqli_real_escape_string($main_text);
         if (!$title || !$main_text) die ("Заполните все поля");
+        $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+        $main_text = htmlspecialchars($main_text, ENT_QUOTES, 'UTF-8');
+
+
 
         $sql = "INSERT INTO posts (post_name, post_text) VALUES ('$title', '$main_text')";
         if (!mysqli_query($link, $sql)) die ("Не удалось добавить пост");
         
         if(!empty($_FILES["file"]))
     {
-        if (((@$_FILES["file"]["type"] == "image/gif") || (@$_FILES["file"]["type"] == "image/jpeg")
-        || (@$_FILES["file"]["type"] == "image/jpg") || (@$_FILES["file"]["type"] == "image/pjpeg")
-        || (@$_FILES["file"]["type"] == "image/x-png") || (@$_FILES["file"]["type"] == "image/png"))
-        && (@$_FILES["file"]["size"] < 102400))
-        {
-            move_uploaded_file($_FILES["file"]["tmp_name"], "upload/" . $_FILES["file"]["name"]);
-            echo "Load in:  " . "upload/" . $_FILES["file"]["name"];
-        }
-        else
-        {
-            echo "upload failed!";
+        $allowedtypes = ['image/gif', 'image/jpeg', 'image/jpg', 'image/pjpeg', 'image/x-png', 'image/png'];
+
+        $fileType = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_FILES['file']['tmp_name']);
+         if (!in_array($fileType, $allowedTypes)) {
+                                                     $errors[] = 'Недопустимый тип файла.';
+                                                  }
+      $maxFileSize = 102400;
+      $realFileSize = filesize($_FILES['file']['tmp_name']);
+          if ($realFileSize > $maxFileSize) {
+                                             $errors[] = 'Файл слишком большой.';
+                                              }
+
+
+
+        $errors = [];
+        if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+                                                         $errors[] = 'Произошла ошибка при загрузке файла.';
+                                                         }
+         if (empty($errors)) {
+
+                              $tempPath = $_FILES['file']['tmp_name'];
+                              $destinationPath = 'upload/' . uniqid() . '_' . basename($_FILES['file']['name']);
+                              if (move_uploaded_file($tempPath, $destinationPath)) {
+                                      echo "Файл загружен успешно: " . $destinationPath;
+                             } else {
+                                $errors[] = 'Не удалось переместить загруженный файл.';
+                             }
+        } else {
+            foreach ($errors as $error) {
+                echo $error . '<br>';
+            }
         }
     }
     }

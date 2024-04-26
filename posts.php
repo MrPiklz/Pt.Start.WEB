@@ -2,6 +2,7 @@
     require_once('bd.php');
     $link = mysqli_connect('127.0.0.1', 'root', 'password', 'AlexBelov');
     $id = $_GET['id'];
+    settype($id, 'integer');
     $sql = "SELECT * FROM posts WHERE id=$id";
     $res = mysqli_query($link, $sql);
 
